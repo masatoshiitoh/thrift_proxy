@@ -36,16 +36,14 @@ terminate(shutdown, _State) ->
 
 handle_call({call, Packed}, _From, State) ->
     debug("~p:~p handle_call({call, ~p}, ~p, ~p)",[?FILE,?LINE,Packed,_From, State]),
+
     {ok, Client0} = thrift_client_util:new("127.0.0.1", 10002, tproxy_thrift, []),
-	%%Client0 = State,
 	{Function, Args} = binary_to_term(base64:decode(Packed)),
 	ArgsList = tuple_to_list(Args),
-	debug("~p:~p handle_call do ~p, ~p~n", [?FILE,?LINE,Function, ArgsList]),
+
 	{_Client1, Result} = thrift_client:call(Client0, Function, ArgsList),
-	debug("~p:~p thrift call result is ~p~n", [?FILE,?LINE,Result]),
+
 	EncodedResult = binary_to_list(base64:encode(term_to_binary(Result))),
-	debug("~p:~p returning result is ~p~n", [?FILE,?LINE,EncodedResult]),
-	%%NewState = Client1,
     thrift_client:close(Client0),
 	{reply, EncodedResult, State}.
 
