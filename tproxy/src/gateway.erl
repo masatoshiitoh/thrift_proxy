@@ -12,16 +12,16 @@ debug(Format, Data) ->
 	error_logger:info_msg(Format, Data).
 
 start_link() ->
-	start_link(9090).
+	start_link(10001).
 
 start_link(Port) ->
 	Handler = ?MODULE,
 	thrift_socket_server:start(
 		[{handler, Handler},
-		{service, tproxy},
+		{service, tproxy_thrift},
 		{ip, "127.0.0.1"},
 		{port, Port},
-		{name, tproxy}]
+		{name, tproxy_server}]
 	).
 
 stop(Server) ->
@@ -32,8 +32,9 @@ handle_function(Function, Args) when is_atom(Function), is_tuple(Args) ->
 	case apply(?MODULE, Function, tuple_to_list(Args)) of
 		ok -> ok;
 		Reply -> {reply, Reply}
-		end.
+	end.
 
-getHelloWorld(Name) ->
-	io_lib:format("Hi, ~p Hello World!", [Name]).
+getHelloWorld(Name) when is_binary(Name) ->
+	list_to_binary("Hi " ++ binary_to_list(Name) ++ ", Hello World!").
+
 

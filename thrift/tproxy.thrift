@@ -1,6 +1,9 @@
 /*
  *
  */
+
+namespace cpp tproxy
+
 service tproxy {
-    string getHelloWorld(1:string key)
+    string getHelloWorld(1:string yourname)
 }
