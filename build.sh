@@ -30,6 +30,18 @@ for f in $CPP_FILES ; do
 done
 g++ $LDOPTS  -o client client.o tproxy*.o -lthrift
 rm *.o
+cd $BASEDIR
+
+
+
+SV_CPP_FILES="server.cpp gen-cpp/tproxy_constants.cpp gen-cpp/tproxy.cpp gen-cpp/tproxy_types.cpp"
+cd server
+for f in $SV_CPP_FILES ; do
+	g++ $CPPOPTS -c $f
+done
+g++ $LDOPTS  -o server server.o tproxy*.o -lthrift
+rm *.o
+cd $BASEDIR
 
 
 
